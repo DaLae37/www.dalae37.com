@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.env*
+README.md
+AGENTS.md
+CLAUDE.md
+.gitignore
+deploy
+*.tsbuildinfo
+coverage
+out
+build
+.vercel
+*.log
+Dockerfile
+.dockerignore

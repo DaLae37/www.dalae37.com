@@ -1,0 +1,16 @@
+html,
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+* {
+    margin: 0px;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: white;
+}
+
+canvas {
+    background-color: black;
+}
