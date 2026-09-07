@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeading } from "@/components/page-heading";
+import { PdfViewer } from "@/components/pdf-viewer";
 import { ProfileIcon } from "@/components/profile-icon";
 import { profileGroups, profileLinks } from "@/data/profile";
 import { resourceUrl } from "@/lib/resource";
@@ -55,6 +56,7 @@ export default function ProfilePage() {
         {profileDocuments.map((document) => {
           const documentUrl = resourceUrl(document.path);
           const previewUrl = `${documentUrl}#view=FitH&zoom=page-width&navpanes=0&pagemode=none`;
+          const viewerUrl = `/resource${document.path}`;
 
           return (
             <article className="document-panel" key={document.path}>
@@ -70,13 +72,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="pdf-viewer">
-                <iframe
-                  src={documentUrl}
-                  title={`${document.title} PDF 미리보기`}
-                  loading="lazy"
-                />
-              </div>
+              <PdfViewer fileUrl={viewerUrl} title={document.title} />
             </article>
           );
         })}

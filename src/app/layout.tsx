@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import { BackToTop } from "@/components/back-to-top";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/config/site";
@@ -33,10 +34,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className={notoSansKr.variable}>
+    <html id="top" lang="ko" className={notoSansKr.variable}>
       <body>
         <SiteHeader />
-        <main className="site-main">{children}</main>
+        <main className="site-main">
+          <div className="site-main-content">{children}</div>
+          <BackToTop />
+        </main>
         <SiteFooter />
       </body>
     </html>
