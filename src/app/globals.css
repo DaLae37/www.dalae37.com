@@ -121,9 +121,10 @@ a:focus-visible, button:focus-visible {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: .25rem;
+  gap: clamp(.375rem, 1.25vw, .625rem);
 }
 .social-nav a {
+  flex: 0 0 auto;
   width: 2rem;
   height: 2rem;
   display: grid;
@@ -178,8 +179,6 @@ a:focus-visible, button:focus-visible {
 .page-heading h1 { margin: 0; font-size: clamp(1.75rem, 1.25rem + 1.5vw, 2.25rem); font-weight: 700; line-height: 1.35; letter-spacing: -.035em; }
 .page-heading p { margin: .625rem 0 0; color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
 .page-heading-action { max-width: 100%; }
-.page-heading-action .button { color: var(--accent); background: var(--accent-soft); }
-
 .button {
   display: inline-flex;
   align-items: center;
@@ -287,8 +286,7 @@ a:focus-visible, button:focus-visible {
   gap: .5rem;
   margin-top: .75rem;
 }
-.pdf-viewer a { text-decoration: underline; text-underline-offset: .2rem; }
-.profile-links a:hover, .pdf-viewer a:hover { color: var(--accent); }
+.profile-links a:hover { color: var(--accent); }
 
 .profile-documents { display: grid; gap: 3rem; margin-top: 3rem; }
 .document-panel { min-width: 0; }
@@ -309,8 +307,7 @@ a:focus-visible, button:focus-visible {
   overflow: hidden;
   background: var(--surface);
 }
-.pdf-viewer object { display: block; width: 100%; height: 100%; border: 0; }
-.pdf-viewer object > p { padding: 1.25rem; color: var(--muted); }
+.pdf-viewer iframe { display: block; width: 100%; height: 100%; border: 0; }
 
 .project-grid, .game-grid {
   display: grid;
@@ -384,7 +381,6 @@ a:focus-visible, button:focus-visible {
   :root { --site-width: calc(100% - 1.5rem); }
   .header-inner { min-height: 3.5rem; gap: .5rem; }
   .brand { font-size: 1rem; }
-  .social-nav { gap: 0; }
   .social-nav a { width: 1.75rem; height: 1.75rem; }
   .social-nav svg { width: 1rem; height: 1rem; }
   .nav-inner { gap: .125rem .875rem; }
@@ -399,7 +395,7 @@ a:focus-visible, button:focus-visible {
   .profile-row { grid-template-columns: minmax(0, 1fr); gap: .25rem; }
   .profile-row dd { color: var(--muted); }
   .document-actions { width: 100%; }
-  .pdf-viewer { height: 80vh; min-height: 28rem; }
+  .pdf-viewer { height: 80svh; min-height: 28rem; }
   .project-grid, .game-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 1.25rem; }
   .infrastructure-row { grid-template-columns: minmax(0, 1fr) auto; }
   .infrastructure-row dd:not(.infrastructure-status) { grid-column: 1 / -1; grid-row: 2; }

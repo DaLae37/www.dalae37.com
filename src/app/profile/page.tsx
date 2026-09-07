@@ -71,11 +71,11 @@ export default function ProfilePage() {
               </div>
 
               <div className="pdf-viewer">
-                <object data={previewUrl} type="application/pdf" title={`${document.title} PDF 미리보기`} aria-label={`${document.title} PDF 미리보기`}>
-                  <p>
-                    PDF를 표시할 수 없습니다. <a href={documentUrl} target="_blank" rel="noreferrer noopener">새 창에서 문서 보기</a>
-                  </p>
-                </object>
+                <iframe
+                  src={documentUrl}
+                  title={`${document.title} PDF 미리보기`}
+                  loading="lazy"
+                />
               </div>
             </article>
           );
