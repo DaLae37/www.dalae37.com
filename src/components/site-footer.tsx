@@ -10,7 +10,7 @@ export function SiteFooter() {
       <div className="footer-inner">
         <div className="footer-credit">
           <span className="footer-copyright-symbol">©</span>{" "}
-          {currentYear} DaLae37. Licensed under{" "}
+          {currentYear} DaLae37.{" "}
           <a
             className="cc-license"
             href="https://creativecommons.org/licenses/by/4.0/"

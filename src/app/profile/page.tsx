@@ -66,7 +66,7 @@ export default function ProfilePage() {
                   <a className="button" href={previewUrl} target="_blank" rel="noreferrer noopener" aria-label={`${document.title} 새 창에서 보기`}>
                     새 창에서 보기
                   </a>
-                  <a className="button" href={documentUrl} download={document.downloadName} aria-label={`${document.title} PDF 다운로드`}>
+                  <a className="button" href={viewerUrl} download={document.downloadName} aria-label={`${document.title} PDF 다운로드`}>
                     PDF 다운로드
                   </a>
                 </div>

@@ -8,6 +8,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url,
 ).toString();
 
+// Use PDF.js decoding instead of device-specific image acceleration, which can
+// produce incorrect colors on mobile browsers. Keep options stable across renders.
+const documentOptions = {
+  isImageDecoderSupported: false,
+  isOffscreenCanvasSupported: false,
+};
+
 type PdfViewerCanvasProps = {
   fileUrl: string;
   title: string;
@@ -43,6 +50,7 @@ export default function PdfViewerCanvas({ fileUrl, title }: PdfViewerCanvasProps
     <div className="pdf-viewer-canvas" ref={containerRef}>
       <Document
         file={fileUrl}
+        options={documentOptions}
         loading={(
           <div className="pdf-viewer-status" role="status">
             {title}를 불러오는 중입니다.
@@ -60,6 +68,8 @@ export default function PdfViewerCanvas({ fileUrl, title }: PdfViewerCanvasProps
             key={`${fileUrl}-${index + 1}`}
             pageNumber={index + 1}
             width={pageWidth}
+            devicePixelRatio={Math.min(2, window.devicePixelRatio || 1)}
+            canvasBackground="#ffffff"
             renderAnnotationLayer={false}
             renderTextLayer={false}
           />
