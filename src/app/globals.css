@@ -399,15 +399,16 @@ a:focus-visible, button:focus-visible {
 .footer-inner {
   min-height: 4.25rem;
   padding: .75rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: .5rem 1.5rem;
   color: var(--brand-color);
   font-size: .875rem;
 }
 .footer-actions { flex: 0 0 auto; display: flex; align-items: center; gap: 1rem; }
-.footer-credit { min-width: 0; overflow-wrap: anywhere; }
+.footer-credit { flex: 0 1 auto; width: fit-content; max-width: 100%; min-width: 0; overflow-wrap: anywhere; }
 .footer-copyright-symbol { font-size: 1rem; }
 .footer-credit a:hover, .footer-actions a:hover { color: var(--accent); }
 .cc-license { display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; vertical-align: baseline; }
@@ -458,9 +459,8 @@ a:focus-visible, button:focus-visible {
   .social-nav svg { width: 1rem; height: 1rem; }
   .nav-inner { gap: .125rem .875rem; }
   .main-nav a { font-size: .875rem; }
-  .footer-inner { grid-template-columns: minmax(0, 1fr); }
-  .footer-credit { grid-column: 1 / -1; }
-  .footer-actions { grid-column: 1; grid-row: 2; justify-self: end; }
+  .footer-inner { column-gap: .75rem; }
+  .footer-actions { gap: .75rem; }
   .section-shell { padding-inline: 1rem; }
   .page-stack { padding-block: 1.75rem 2.5rem; }
   .page-heading h1 { font-size: 1.75rem; }
