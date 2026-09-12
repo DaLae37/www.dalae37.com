@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IconHintLink } from "@/components/icon-hint-link";
 import { BlogIcon, GithubIcon, YoutubeIcon } from "@/components/icons";
 import { site } from "@/config/site";
 
@@ -35,12 +36,22 @@ export function SiteHeader() {
         </Link>
 
         <div className="social-nav" aria-label="외부 링크">
-          {site.socials.map((item) => {
+          {site.socials.map((item, index) => {
             const Icon = socialIcons[item.label];
             return (
-              <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener" aria-label={item.label}>
+              <IconHintLink
+                key={item.href}
+                align="end"
+                hint={`${item.label} 열기`}
+                hintId={`header-social-hint-${index}`}
+                href={item.href}
+                label={item.label}
+                position="bottom"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 <Icon />
-              </a>
+              </IconHintLink>
             );
           })}
         </div>

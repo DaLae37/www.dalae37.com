@@ -2,6 +2,7 @@ node_modules
 .next
 public/resource
 .git
+.github
 .env*
 README.md
 AGENTS.md

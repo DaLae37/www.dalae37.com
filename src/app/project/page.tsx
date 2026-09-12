@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHeading } from "@/components/page-heading";
+import { ProjectBrowser } from "@/components/project-browser";
 import { projects } from "@/data/projects";
 import { resourceUrl } from "@/lib/resource";
 
@@ -9,6 +10,13 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectPage() {
+  const publishedProjects = projects
+    .filter((project) => project.published)
+    .map(({ image, ...project }) => ({
+      ...project,
+      imageUrl: resourceUrl(image),
+    }));
+
   return (
     <div className="section-shell page-stack">
       <PageHeading
@@ -16,19 +24,7 @@ export default function ProjectPage() {
         action={<a className="button" href={resourceUrl("/project/portfolio.pdf")} target="_blank" rel="noreferrer noopener">포트폴리오 PDF</a>}
       />
 
-      <section className="project-grid">
-        {projects.map((project) => (
-          <article className="project-item" key={project.slug}>
-            <div className="project-media">
-              <img src={resourceUrl(project.image)} alt={`${project.title} 프로젝트 이미지`} loading="lazy" />
-            </div>
-            <div className="project-content">
-              <h2>{project.title}</h2>
-              <p>{project.tags.join(" · ")}</p>
-            </div>
-          </article>
-        ))}
-      </section>
+      <ProjectBrowser projects={publishedProjects} />
     </div>
   );
 }

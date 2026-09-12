@@ -1,4 +1,5 @@
 import { site } from "@/config/site";
+import { IconHintLink } from "@/components/icon-hint-link";
 import { MailIcon } from "@/components/icons";
 import { resourceUrl } from "@/lib/resource";
 
@@ -27,9 +28,16 @@ export function SiteFooter() {
         </div>
         <div className="footer-actions">
           <a href="https://github.com/dalae37/www.dalae37.com" target="_blank" rel="noreferrer noopener">Source Code</a>
-          <a className="mail-link" href={`mailto:${site.email}`} aria-label="이메일 보내기">
+          <IconHintLink
+            align="end"
+            hint="이메일 보내기"
+            hintId="footer-email-hint"
+            href={`mailto:${site.email}`}
+            label="이메일 보내기"
+            linkClassName="mail-link"
+          >
             <MailIcon />
-          </a>
+          </IconHintLink>
         </div>
       </div>
     </footer>

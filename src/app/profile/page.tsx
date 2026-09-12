@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { IconHintLink } from "@/components/icon-hint-link";
 import { PageHeading } from "@/components/page-heading";
 import { PdfViewer } from "@/components/pdf-viewer";
 import { ProfileIcon } from "@/components/profile-icon";
@@ -44,10 +45,19 @@ export default function ProfilePage() {
       <section className="profile-links-section" aria-labelledby="profile-links-title">
         <h2 id="profile-links-title">온라인 프로필</h2>
         <div className="social-nav profile-links">
-          {profileLinks.map((item) => (
-            <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener" aria-label={item.label} title={item.label}>
+          {profileLinks.map((item, index) => (
+            <IconHintLink
+              key={item.href}
+              align={index === 0 ? "start" : index === profileLinks.length - 1 ? "end" : "center"}
+              hint={`${item.label} 프로필 열기`}
+              hintId={`profile-link-hint-${index}`}
+              href={item.href}
+              label={item.label}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               <ProfileIcon name={item.label} />
-            </a>
+            </IconHintLink>
           ))}
         </div>
       </section>
