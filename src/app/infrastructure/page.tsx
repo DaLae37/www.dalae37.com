@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeading } from "@/components/page-heading";
 
 export const metadata: Metadata = {
-  title: "홈랩",
+  title: "인프라",
   description: "dalae37.com의 서비스 인프라 구성",
 };
 
@@ -33,11 +33,11 @@ const infrastructure = [
   },
 ] as const;
 
-export default function HomelabPage() {
+export default function InfrastructurePage() {
   return (
-    <div className="section-shell page-stack homelab-page">
+    <div className="section-shell page-stack infrastructure-page">
       <PageHeading
-        title="홈랩"
+        title="인프라"
         description="dalae37.com의 서버와 인프라 구성"
         action={
           <a
@@ -51,8 +51,8 @@ export default function HomelabPage() {
         }
       />
 
-      <section className="homelab-section" aria-labelledby="infrastructure-title">
-        <div className="homelab-section-heading">
+      <section className="infrastructure-section" aria-labelledby="infrastructure-title">
+        <div className="infrastructure-section-heading">
           <h2 id="infrastructure-title">서비스 구성</h2>
           <p>www.dalae37.com의 서버와 인프라 구성</p>
         </div>

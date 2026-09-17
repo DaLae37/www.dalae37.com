@@ -353,7 +353,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .profile-row:last-child, .infrastructure-row:last-child { border-bottom: 0; }
 .profile-links-section { margin-top: 1.25rem; }
-.profile-links-section h2, .document-header h2, .homelab-section h2 {
+.profile-links-section h2, .document-header h2, .infrastructure-section h2 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
@@ -603,9 +603,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .game-item:hover { border-color: var(--accent); }
 .game-item:hover h2 { text-decoration: underline; text-underline-offset: .2rem; }
 
-.homelab-section + .homelab-section { margin-top: 2.5rem; }
-.homelab-section-heading { margin-bottom: 1rem; }
-.homelab-section-heading p { margin: .5rem 0 0; color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
+.infrastructure-section + .infrastructure-section { margin-top: 2.5rem; }
+.infrastructure-section-heading { margin-bottom: 1rem; }
+.infrastructure-section-heading p { margin: .5rem 0 0; color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
 .infrastructure-row {
   display: grid;
   grid-template-columns: 7rem minmax(0, 1fr) auto;

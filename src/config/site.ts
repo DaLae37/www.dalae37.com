@@ -7,7 +7,7 @@ export const site = {
   navigation: [
     { href: "/profile", label: "프로필" },
     { href: "/project", label: "프로젝트" },
-    { href: "/homelab", label: "홈랩" },
+    { href: "/infrastructure", label: "인프라" },
     { href: "/webgame", label: "웹 게임" },
     { href: "/board", label: "게시판" },
   ],
