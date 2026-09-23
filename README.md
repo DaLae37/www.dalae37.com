@@ -28,6 +28,10 @@ GitHub Actions Variables에서 설정 :
 - `RESOURCE_URL` : 이미지 및 PDF 리소스 주소 (AWS S3)
 - `WEB_GAME_URL` : 웹 게임 주소
 
+AWS-IAM 설정 :
+
+- 웹 서버의 IAM 사용자 또는 역할에 `lambda:InvokeFunctionUrl`, `lambda:InvokeFunction` 권한 필요 (Lambda 함수 호출 용)
+
 변경 사항은 Docker 이미지를 다시 빌드해야 적용됨
 
 ## 로컬 개발

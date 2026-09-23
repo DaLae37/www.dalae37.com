@@ -276,21 +276,26 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .home-page {
   flex: 1;
   min-height: 32rem;
-  display: grid;
-  place-items: center;
-  padding: 3.5rem 2rem;
+  padding: 2rem;
+}
+.home-logo-panel {
+  min-height: 10rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: .5rem;
 }
 .home-logos {
-  width: 100%;
+  width: fit-content;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 4rem;
+  justify-content: flex-start;
+  gap: 2rem;
 }
 .logo-orbit {
   flex: 0 0 auto;
-  width: min(8.5rem, 100%);
+  width: 7rem;
   height: auto;
   aspect-ratio: 1;
   padding: 0;
@@ -313,6 +318,99 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 @keyframes logo-rotate {
   from { transform: rotateX(10deg) rotateY(0deg); }
   to { transform: rotateX(10deg) rotateY(360deg); }
+}
+.interests {
+  margin-top: 1.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: .875rem;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+}
+.interests-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: 1.25rem;
+}
+.interests-eyebrow {
+  margin: 0 0 .125rem;
+  color: var(--accent);
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.interests-heading h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.35;
+  letter-spacing: -.04em;
+}
+.interests-heading > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .875rem;
+  word-break: keep-all;
+}
+.interest-category {
+  min-width: 0;
+}
+.interest-tabs {
+  display: flex;
+  gap: .25rem;
+  border-bottom: 1px solid var(--line);
+}
+.interest-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: .5rem .875rem;
+  color: var(--muted);
+  font-size: .875rem;
+  font-weight: 700;
+}
+.interest-tab.is-active {
+  color: var(--accent);
+}
+.interest-tab.is-active::after {
+  position: absolute;
+  right: .75rem;
+  bottom: -1px;
+  left: .75rem;
+  height: .1875rem;
+  border-radius: .1875rem .1875rem 0 0;
+  background: var(--accent);
+  content: "";
+}
+.interest-tab-panel {
+  padding-top: 1.5rem;
+}
+.sports-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  align-items: start;
+  gap: 1.25rem;
+}
+.interest-card-embed,
+.interest-card-placeholder {
+  width: 100%;
+  max-width: 26.25rem;
+  min-height: 12.5rem;
+}
+.interest-card-embed > .team-component {
+  width: 100%;
+}
+.interest-card-placeholder {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--line);
+  border-radius: 1.375rem;
+  background: var(--media-bg);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: .875rem;
+  letter-spacing: .04em;
 }
 
 .profile-details, .operation-list, .infrastructure-list {
@@ -688,9 +786,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .section-shell { padding-inline: 1rem; }
   .page-stack { padding-block: 1.75rem 2.5rem; }
   .page-heading h1 { font-size: 1.75rem; }
-  .home-page { min-height: 26rem; padding: 2rem 1.5rem; }
-  .home-logos { gap: 1.5rem; }
-  .logo-orbit { width: min(6.75rem, 100%); }
+  .home-page { min-height: 26rem; padding: 1.25rem 1rem; }
+  .home-logo-panel { min-height: 8rem; padding: .25rem; }
+  .home-logos { gap: 1rem; }
+  .logo-orbit { width: 5.75rem; }
+  .interests { margin-top: 1rem; padding: 1rem; }
+  .interests-heading { align-items: flex-start; flex-direction: column; gap: .375rem; }
+  .interest-tab-panel { padding-top: 1rem; }
   .profile-details, .operation-list, .infrastructure-list { padding-inline: 1rem; }
   .profile-row { grid-template-columns: minmax(0, 1fr); gap: .25rem; }
   .profile-row dd { color: var(--muted); }
