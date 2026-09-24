@@ -2,18 +2,17 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { fetchLambdaFunctionUrlHtml } from "@/lib/lambda-function-url";
 
+const teamCardFunctionUrl =
+  "https://dw2sbx3tcyb5rkho7q7xeb6enu0oprzh.lambda-url.ap-northeast-2.on.aws/";
+
 const teams = [
   {
     id: "samsunglions",
     name: "삼성 라이온즈",
-    functionUrl:
-      "https://dw2sbx3tcyb5rkho7q7xeb6enu0oprzh.lambda-url.ap-northeast-2.on.aws/",
   },
   {
     id: "fcseoul",
     name: "FC서울",
-    functionUrl:
-      "https://f3vcbw6pmxuz7zcdtrn2unovui0nvvdb.lambda-url.ap-northeast-2.on.aws/",
   },
 ] as const;
 
@@ -34,7 +33,9 @@ async function TeamCard({ team }: { team: Team }) {
   await connection();
 
   try {
-    const html = await fetchLambdaFunctionUrlHtml(team.functionUrl);
+    const functionUrl = new URL(teamCardFunctionUrl);
+    functionUrl.searchParams.set("team", team.id);
+    const html = await fetchLambdaFunctionUrlHtml(functionUrl);
 
     return (
       <div
