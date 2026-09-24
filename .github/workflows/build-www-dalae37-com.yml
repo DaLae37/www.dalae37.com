@@ -18,8 +18,6 @@ concurrency:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ vars.CONTAINER_IMAGE_NAME || 'dalae37/www.dalae37.com' }}
-  PLATFORMS: ${{ vars.CONTAINER_PLATFORMS || 'linux/amd64,linux/arm64' }}
-  QEMU_PLATFORMS: ${{ vars.CONTAINER_QEMU_PLATFORMS || 'arm64' }}
   BUILD_CONTEXT: ${{ vars.CONTAINER_BUILD_CONTEXT || '.' }}
   DOCKERFILE: ${{ vars.CONTAINER_DOCKERFILE || './Dockerfile' }}
   CACHE_SCOPE: ${{ vars.CONTAINER_CACHE_SCOPE || 'www-dalae37-com-multiarch' }}
@@ -28,19 +26,25 @@ env:
 
 jobs:
   verify:
+    name: Verify (${{ matrix.platform }})
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
-        with:
-          platforms: ${{ env.QEMU_PLATFORMS }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
@@ -51,31 +55,36 @@ jobs:
           build-args: |
             RESOURCE_URL=${{ env.RESOURCE_URL }}
             WEB_GAME_URL=${{ env.WEB_GAME_URL }}
-          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}
-          cache-to: type=gha,mode=max,scope=${{ env.CACHE_SCOPE }}
+          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ env.CACHE_SCOPE }}-${{ matrix.arch }}
           context: ${{ env.BUILD_CONTEXT }}
           file: ${{ env.DOCKERFILE }}
-          platforms: ${{ env.PLATFORMS }}
+          platforms: ${{ matrix.platform }}
+          provenance: false
           pull: true
           push: false
 
   publish:
+    name: Publish digest (${{ matrix.platform }})
     if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     permissions:
-      attestations: write
       contents: read
-      id-token: write
       packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
-        with:
-          platforms: ${{ env.QEMU_PLATFORMS }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
@@ -106,19 +115,157 @@ jobs:
           build-args: |
             RESOURCE_URL=${{ env.RESOURCE_URL }}
             WEB_GAME_URL=${{ env.WEB_GAME_URL }}
-          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}
-          cache-to: type=gha,mode=max,scope=${{ env.CACHE_SCOPE }}
+          cache-from: type=gha,scope=${{ env.CACHE_SCOPE }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ env.CACHE_SCOPE }}-${{ matrix.arch }}
           context: ${{ env.BUILD_CONTEXT }}
           file: ${{ env.DOCKERFILE }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: ${{ env.PLATFORMS }}
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          platforms: ${{ matrix.platform }}
+          provenance: false
           pull: true
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+
+      - name: Export image digest
+        env:
+          DIGEST: ${{ steps.push.outputs.digest }}
+          DIGEST_FILE: ${{ runner.temp }}/digests/${{ matrix.arch }}.digest
+        run: |
+          if [[ ! "$DIGEST" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "Unexpected image digest: $DIGEST" >&2
+            exit 1
+          fi
+          mkdir -p "${{ runner.temp }}/digests"
+          printf '%s\n' "$DIGEST" > "$DIGEST_FILE"
+
+      - name: Upload image digest
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: digests-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/${{ matrix.arch }}.digest
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Clean up digest file
+        if: always()
+        run: |
+          rm -f "${{ runner.temp }}/digests/${{ matrix.arch }}.digest"
+          rmdir "${{ runner.temp }}/digests" 2>/dev/null || true
+
+  merge:
+    name: Merge and attest multi-platform image
+    if: github.event_name != 'pull_request' && needs.publish.result == 'success'
+    needs: publish
+    runs-on: ubuntu-24.04
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+
+    steps:
+      - name: Download image digests
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate image metadata
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: latest=false
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=long
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Create multi-platform manifest
+        id: manifest
+        env:
+          DIGEST_DIR: ${{ runner.temp }}/digests
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          MANIFEST_METADATA: ${{ runner.temp }}/manifest-metadata.json
+          TAGS: ${{ steps.meta.outputs.tags }}
+        run: |
+          tag_args=()
+          while IFS= read -r tag; do
+            if [[ -n "$tag" ]]; then
+              tag_args+=(--tag "$tag")
+            fi
+          done <<< "$TAGS"
+
+          if (( ${#tag_args[@]} == 0 )); then
+            echo "No final image tags were generated" >&2
+            exit 1
+          fi
+
+          sources=()
+          for arch in amd64 arm64; do
+            digest_file="$DIGEST_DIR/$arch.digest"
+            if [[ ! -f "$digest_file" ]]; then
+              echo "Missing digest for $arch" >&2
+              exit 1
+            fi
+
+            digest="$(tr -d '\r\n' < "$digest_file")"
+            if [[ ! "$digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+              echo "Unexpected digest for $arch: $digest" >&2
+              exit 1
+            fi
+            sources+=("$IMAGE@$digest")
+          done
+
+          docker buildx imagetools create \
+            "${tag_args[@]}" \
+            --metadata-file "$MANIFEST_METADATA" \
+            "${sources[@]}"
+
+          manifest_digest="$(jq -r '."containerimage.descriptor".digest // empty' "$MANIFEST_METADATA")"
+          if [[ ! "$manifest_digest" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+            echo "Unexpected manifest digest: $manifest_digest" >&2
+            exit 1
+          fi
+          printf 'digest=%s\n' "$manifest_digest" >> "$GITHUB_OUTPUT"
+
+      - name: Verify manifest platforms
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          MANIFEST_DIGEST: ${{ steps.manifest.outputs.digest }}
+          MANIFEST_INSPECTION: ${{ runner.temp }}/manifest-inspection.json
+        run: |
+          docker buildx imagetools inspect "$IMAGE@$MANIFEST_DIGEST" \
+            --format '{{json .Manifest}}' > "$MANIFEST_INSPECTION"
+
+          jq -e '
+            [.manifests[]?.platform | "\(.os)/\(.architecture)"] as $platforms
+            | ($platforms | index("linux/amd64") != null)
+              and ($platforms | index("linux/arm64") != null)
+          ' "$MANIFEST_INSPECTION"
 
       - name: Attest image provenance
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.push.outputs.digest }}
+          subject-digest: ${{ steps.manifest.outputs.digest }}
           push-to-registry: true
+          create-storage-record: false
+
+      - name: Clean up temporary files
+        if: always()
+        run: |
+          rm -rf "${{ runner.temp }}/digests"
+          rm -f "${{ runner.temp }}/manifest-metadata.json"
+          rm -f "${{ runner.temp }}/manifest-inspection.json"
