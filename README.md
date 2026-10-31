@@ -39,6 +39,10 @@ AWS-IAM 설정 :
 개발 서버 실행 :
 
 ```bash
+nvm install
+nvm use
+node --version
+npm --version
 npm ci
 npm run dev
 ```
@@ -55,7 +59,8 @@ npm run build
 
 이 프로젝트는 다음과 같은 환경을 사용함
 
-* **Node.js:** 22 이상
+* **Node.js:** 26.13.0 LTS (Lithium), `.nvmrc`로 고정
+* **npm:** 11.20.0 (Node.js 26.13.0에 포함)
 * **Next.js:** 16.3.4
 * **React:** 19.2.8
 * **TypeScript:** 5.9

@@ -63,6 +63,13 @@ jobs:
           provenance: false
           pull: true
           push: false
+          load: true
+          tags: www-dalae37-com:verify
+
+      - name: Verify container runtime and health
+        env:
+          PLATFORM: ${{ matrix.platform }}
+        run: bash .github/scripts/verify-container.sh www-dalae37-com:verify "$PLATFORM"
 
   publish:
     name: Publish digest (${{ matrix.platform }})
@@ -124,6 +131,13 @@ jobs:
           platforms: ${{ matrix.platform }}
           provenance: false
           pull: true
+
+      - name: Verify published container runtime and health
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+          PLATFORM: ${{ matrix.platform }}
+        run: bash .github/scripts/verify-container.sh "$IMAGE@$DIGEST" "$PLATFORM"
 
       - name: Export image digest
         env:
