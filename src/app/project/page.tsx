@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ProjectPage() {
   const publishedProjects = projects.flatMap(({ image, publication, repositories = [], ...project }) => {
-    if (!publication.web) {
+    if (publication.web !== true || !image) {
       return [];
     }
 

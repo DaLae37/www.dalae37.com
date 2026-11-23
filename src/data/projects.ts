@@ -95,14 +95,14 @@ export type ProjectClassification = {
 export type Project = {
   slug: string;
   title: string;
-  image: string;
+  image: string | null;
   description?: string;
   classification: ProjectClassification;
   searchTerms?: readonly string[];
   repositories?: readonly (keyof typeof projectRepositories)[];
   publication: {
-    web: boolean;
-    pdf: boolean;
+    web: boolean | null;
+    pdf: boolean | null;
   };
 };
 
@@ -338,5 +338,47 @@ export const projects: readonly Project[] = [
     image: "/project/ZeroEngine.webp",
     classification: { type: "Game Engine" },
     publication: { web: false, pdf: false },
+  },
+  {
+    slug: "sewermom",
+    title: "Sewer Mom",
+    image: "/webgame/sewermom.webp",
+    classification: { technology: "Unity", type: "Game" },
+    publication: { web: null, pdf: null },
+  },
+  {
+    slug: "blindchildvr",
+    title: "BlindChildVR",
+    image: null,
+    classification: { technology: "Unreal Engine", type: "VR Animation" },
+    publication: { web: null, pdf: null },
+  },
+  {
+    slug: "powerstationstory",
+    title: "발전소 이야기",
+    image: null,
+    classification: { technology: "Unity", type: "Game" },
+    publication: { web: null, pdf: null },
+  },
+  {
+    slug: "dalae37-com",
+    title: "dalae37.com",
+    image: null,
+    classification: { technology: "Web", type: "Website" },
+    publication: { web: null, pdf: null },
+  },
+  {
+    slug: "utf8",
+    title: "UTF8",
+    image: null,
+    classification: { technology: "Web", type: "Game" },
+    publication: { web: null, pdf: null },
+  },
+  {
+    slug: "plusminusgameserver",
+    title: "Plus Minus Game Server",
+    image: null,
+    classification: { technology: "Node.js", type: "Game Server" },
+    publication: { web: null, pdf: null },
   },
 ];
