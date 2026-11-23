@@ -1,8 +1,91 @@
 export type ProjectRepository = {
-  name: string;
-  url: string;
+  relationship: "owner" | "organization-contributor" | "individual-contributor";
+  visibility: "public" | "private";
   topics: readonly string[];
 };
+
+export const projectRepositories = {
+  "DaLae37/AmazingChecks_CPP": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["chess", "cpp", "window-console"],
+  },
+  "DaLae37/AmazingChecks_Python": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["chess-game", "pygame", "python"],
+  },
+  "DaLae37/AmazingPhoto": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["cpp", "multimedia-applications", "qt5", "visualstudio2022"],
+  },
+  "DaLae37/DropOutSchool": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["c-sharp", "game", "onetouch", "unity"],
+  },
+  "Team-Wally/ElementArithme": {
+    relationship: "organization-contributor",
+    visibility: "public",
+    topics: ["unity"],
+  },
+  "DaLae37/HitABall": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["game", "pygame", "python", "shooting-game"],
+  },
+  "DaLae37/NirnusMagicSchoolLife_Remake": {
+    relationship: "owner",
+    visibility: "public",
+    topics: [],
+  },
+  "DaLae37/Pong": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["cpp", "game", "tabletennis", "winapi"],
+  },
+  "DaLae37/PongGameServer": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["cpp", "gameserver", "visualstudio2022", "winsocket"],
+  },
+  "Team-Wally/ReadMe_Android": {
+    relationship: "organization-contributor",
+    visibility: "public",
+    topics: ["android-studio", "app", "kotlin", "text-reader"],
+  },
+  "DaLae37/DL-Engine-Console": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["ascii-rendering", "clanguage", "framework", "game-engine", "windows-console"],
+  },
+  "DaLae37/DL-Engine": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["framework", "game-engine"],
+  },
+  "DaLae37/DL-Engine-Direct2D": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["cpp", "direct2d", "framework", "rendering-engine"],
+  },
+  "DaLae37/DL-Engine-DirectX11": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["cpp", "directx11", "framework", "rendering-engine"],
+  },
+  "DaLae37/DL-Engine-WebGPU": {
+    relationship: "owner",
+    visibility: "public",
+    topics: ["framework", "html-css-javascript", "rendering-engine", "webgpu"],
+  },
+  "W298/THE-CATS": {
+    relationship: "individual-contributor",
+    visibility: "public",
+    topics: ["cats", "survival-game", "unreal-engine-4"],
+  },
+} satisfies Record<`${string}/${string}`, ProjectRepository>;
 
 export type ProjectClassification = {
   technology?: string;
@@ -16,8 +99,11 @@ export type Project = {
   description?: string;
   classification: ProjectClassification;
   searchTerms?: readonly string[];
-  repositories?: readonly ProjectRepository[];
-  published: boolean;
+  repositories?: readonly (keyof typeof projectRepositories)[];
+  publication: {
+    web: boolean;
+    pdf: boolean;
+  };
 };
 
 export const projects: readonly Project[] = [
@@ -28,19 +114,8 @@ export const projects: readonly Project[] = [
     description: "A simple console-based chess game on C++, with a Python/Pygame version also available.",
     classification: { technology: "C++", type: "Game" },
     searchTerms: ["Windows Console", "Python", "Pygame", "Chess"],
-    repositories: [
-      {
-        name: "AmazingChecks_CPP",
-        url: "https://github.com/DaLae37/AmazingChecks_CPP",
-        topics: ["chess", "cpp", "window-console"],
-      },
-      {
-        name: "AmazingChecks_Python",
-        url: "https://github.com/DaLae37/AmazingChecks_Python",
-        topics: ["chess-game", "pygame", "python"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/AmazingChecks_CPP", "DaLae37/AmazingChecks_Python"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "amazingphoto",
@@ -49,14 +124,8 @@ export const projects: readonly Project[] = [
     description: "Multimedia Managing Program.",
     classification: { technology: "C++", type: "Application" },
     searchTerms: ["Qt 5", "Multimedia"],
-    repositories: [
-      {
-        name: "AmazingPhoto",
-        url: "https://github.com/DaLae37/AmazingPhoto",
-        topics: ["cpp", "multimedia-applications", "qt5", "visualstudio2022"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/AmazingPhoto"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "dllog",
@@ -64,7 +133,7 @@ export const projects: readonly Project[] = [
     image: "/project/dllog.webp",
     classification: { type: "Application" },
     searchTerms: ["Data"],
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "dropoutschool",
@@ -72,14 +141,8 @@ export const projects: readonly Project[] = [
     image: "/project/dropoutschool.webp",
     classification: { technology: "Unity", type: "Game" },
     searchTerms: ["C#", "One-touch"],
-    repositories: [
-      {
-        name: "DropOutSchool",
-        url: "https://github.com/DaLae37/DropOutSchool",
-        topics: ["c-sharp", "game", "onetouch", "unity"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/DropOutSchool"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "elementarithme",
@@ -87,14 +150,15 @@ export const projects: readonly Project[] = [
     image: "/project/elementarithme.webp",
     classification: { technology: "Unity", type: "Game" },
     searchTerms: ["WebGL"],
-    published: true,
+    repositories: ["Team-Wally/ElementArithme"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "energia",
     title: "Energia",
     image: "/project/energia.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "fireescapesimulation",
@@ -102,14 +166,14 @@ export const projects: readonly Project[] = [
     image: "/project/fireescapesimulation.webp",
     classification: { type: "Simulation" },
     searchTerms: ["3D"],
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "gotoschool",
     title: "Go To School",
     image: "/project/gotoschool.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "hitaball",
@@ -118,14 +182,8 @@ export const projects: readonly Project[] = [
     description: "Ball hitting game like golf.",
     classification: { technology: "Pygame", type: "Game" },
     searchTerms: ["Python", "Shooting"],
-    repositories: [
-      {
-        name: "HitABall",
-        url: "https://github.com/DaLae37/HitABall",
-        topics: ["game", "pygame", "python", "shooting-game"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/HitABall"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "littleprince",
@@ -133,14 +191,14 @@ export const projects: readonly Project[] = [
     image: "/project/littleprince.webp",
     classification: { technology: "Unity", type: "Game" },
     searchTerms: ["WebGL"],
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "mintandchoco",
     title: "Mint & Choco",
     image: "/project/mintandchoco.webp",
     classification: { technology: "Web", type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "nirnusmagicschoollife",
@@ -148,14 +206,8 @@ export const projects: readonly Project[] = [
     image: "/project/nirnusmagicschoollife.webp",
     description: "A C++ remake of Nirnu's Magic School Life.",
     classification: { technology: "C++", type: "Game" },
-    repositories: [
-      {
-        name: "NirnusMagicSchoolLife_Remake",
-        url: "https://github.com/DaLae37/NirnusMagicSchoolLife_Remake",
-        topics: [],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/NirnusMagicSchoolLife_Remake"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "phoz",
@@ -163,7 +215,7 @@ export const projects: readonly Project[] = [
     image: "/project/phoz.webp",
     classification: { type: "Application" },
     searchTerms: ["Photo"],
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "pong",
@@ -172,26 +224,16 @@ export const projects: readonly Project[] = [
     description: "A table tennis game with a separate network game server.",
     classification: { technology: "C++", type: "Game" },
     searchTerms: ["WinAPI", "Winsock", "Table Tennis", "Game Server", "Network"],
-    repositories: [
-      {
-        name: "Pong",
-        url: "https://github.com/DaLae37/Pong",
-        topics: ["cpp", "game", "tabletennis", "winapi"],
-      },
-      {
-        name: "PongGameServer",
-        url: "https://github.com/DaLae37/PongGameServer",
-        topics: ["cpp", "gameserver", "visualstudio2022", "winsocket"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/Pong", "DaLae37/PongGameServer"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "readme",
     title: "README",
     image: "/project/readme.webp",
     classification: { type: "Application" },
-    published: true,
+    repositories: ["Team-Wally/ReadMe_Android"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "rhythmicbaseballworld",
@@ -199,42 +241,42 @@ export const projects: readonly Project[] = [
     image: "/project/rhythmicbaseballworld.webp",
     classification: { type: "Game" },
     searchTerms: ["Rhythm"],
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "riotofmincho",
     title: "Riot of Mincho",
     image: "/project/riotofmincho.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "waveocean",
     title: "Wave Ocean",
     image: "/project/waveocean_rock.webp",
     classification: { type: "Simulation" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "apartment",
     title: "Apartment",
     image: "/project/apartment_logo.png",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "chickenatthezoo",
     title: "Chicken at the Zoo",
     image: "/project/chickenatthezoo.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "chickenfrompoultryfarm",
     title: "Chicken from Poultry Farm",
     image: "/project/chickenfrompoultryfarm.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "dl-engine-console",
@@ -243,14 +285,8 @@ export const projects: readonly Project[] = [
     description: "C language based Windows Console Game Engine.",
     classification: { technology: "C", type: "Game Engine" },
     searchTerms: ["Windows Console"],
-    repositories: [
-      {
-        name: "DL-Engine-Console",
-        url: "https://github.com/DaLae37/DL-Engine-Console",
-        topics: ["ascii-rendering", "clanguage", "framework", "game-engine", "windows-console"],
-      },
-    ],
-    published: true,
+    repositories: ["DaLae37/DL-Engine-Console"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "dl-engine",
@@ -260,62 +296,47 @@ export const projects: readonly Project[] = [
     classification: { technology: "DirectX", type: "Game Engine" },
     searchTerms: ["C++", "Python", "Pygame", "JavaScript", "WebGPU", "Rendering Framework"],
     repositories: [
-      {
-        name: "DL-Engine",
-        url: "https://github.com/DaLae37/DL-Engine",
-        topics: ["framework", "game-engine"],
-      },
-      {
-        name: "DL-Engine-Direct2D",
-        url: "https://github.com/DaLae37/DL-Engine-Direct2D",
-        topics: ["cpp", "direct2d", "framework", "rendering-engine"],
-      },
-      {
-        name: "DL-Engine-DirectX11",
-        url: "https://github.com/DaLae37/DL-Engine-DirectX11",
-        topics: ["cpp", "directx11", "framework", "rendering-engine"],
-      },
-      {
-        name: "DL-Engine-WebGPU",
-        url: "https://github.com/DaLae37/DL-Engine-WebGPU",
-        topics: ["framework", "html-css-javascript", "rendering-engine", "webgpu"],
-      },
+      "DaLae37/DL-Engine",
+      "DaLae37/DL-Engine-Direct2D",
+      "DaLae37/DL-Engine-DirectX11",
+      "DaLae37/DL-Engine-WebGPU",
     ],
-    published: true,
+    publication: { web: true, pdf: true },
   },
   {
     slug: "findingyounghee",
     title: "Finding Younghee",
     image: "/project/findingyounghee_logo.png",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "imshopkeeper",
     title: "I'm Shopkeeper",
     image: "/project/imshopkeeper.webp",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "onthetop",
     title: "On the Top",
     image: "/project/onthetop_logo.png",
     classification: { type: "Game" },
-    published: true,
+    publication: { web: false, pdf: true },
   },
   {
     slug: "thecats",
     title: "The Cats",
     image: "/project/thecats_logo.png",
     classification: { type: "Game" },
-    published: true,
+    repositories: ["W298/THE-CATS"],
+    publication: { web: true, pdf: true },
   },
   {
     slug: "zeroengine",
     title: "ZeroEngine",
     image: "/project/ZeroEngine.webp",
     classification: { type: "Game Engine" },
-    published: true,
+    publication: { web: false, pdf: false },
   },
 ];
