@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeading } from "@/components/page-heading";
 import { ProjectBrowser } from "@/components/project-browser";
-import { projects } from "@/data/projects";
+import { projectRepositories, projects } from "@/data/projects";
 import { resourceUrl } from "@/lib/resource";
 
 export const metadata: Metadata = {
@@ -10,12 +10,25 @@ export const metadata: Metadata = {
 };
 
 export default function ProjectPage() {
-  const publishedProjects = projects
-    .filter((project) => project.published)
-    .map(({ image, ...project }) => ({
-      ...project,
-      imageUrl: resourceUrl(image),
-    }));
+  const publishedProjects = projects.flatMap(({ image, publication, repositories = [], ...project }) => {
+    if (publication.web !== true || !image) {
+      return [];
+    }
+
+    const publicRepositories = repositories
+      .filter((fullName) => projectRepositories[fullName].visibility === "public")
+      .map((fullName) => ({
+        name: fullName.split("/")[1],
+        url: `https://github.com/${fullName}`,
+        topics: projectRepositories[fullName].topics,
+      }));
+
+    if (publicRepositories.length === 0) {
+      return [];
+    }
+
+    return [{ ...project, imageUrl: resourceUrl(image), repositories: publicRepositories }];
+  });
 
   return (
     <div className="section-shell page-stack">

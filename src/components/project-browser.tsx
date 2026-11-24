@@ -4,8 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { GithubIcon } from "@/components/icons";
 import type { Project } from "@/data/projects";
 
-export type ProjectBrowserItem = Omit<Project, "image"> & {
+export type ProjectBrowserItem = Pick<Project, "slug" | "title" | "description" | "classification" | "searchTerms"> & {
   imageUrl: string;
+  repositories: readonly {
+    name: string;
+    url: string;
+    topics: readonly string[];
+  }[];
 };
 
 type ProjectBrowserProps = {
@@ -46,7 +51,7 @@ export function ProjectBrowser({ projects }: ProjectBrowserProps) {
         project.classification.technology ?? "",
         project.classification.type,
         ...(project.searchTerms ?? []),
-        ...(project.repositories?.flatMap((repository) => repository.topics) ?? []),
+        ...project.repositories.flatMap((repository) => repository.topics),
       ].join(" "));
 
       return terms.every((term) => searchableText.includes(term));
@@ -156,7 +161,7 @@ export function ProjectBrowser({ projects }: ProjectBrowserProps) {
                 {selectedProject.description ?? "프로젝트 설명을 준비 중입니다."}
               </p>
 
-              {selectedProject.repositories?.length ? (
+              {selectedProject.repositories.length ? (
                 <section className="project-dialog-repositories" aria-labelledby="project-dialog-repositories-title">
                   <h3 id="project-dialog-repositories-title">GitHub 저장소</h3>
                   <ul className="project-repository-list" role="list">
